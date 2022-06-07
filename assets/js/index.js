@@ -66,7 +66,12 @@ function getFiveDayForcast(lat, lon){
 // TODO: 5 day forcast gives, date, icon for conditions, temp, wind speed, humidity
 // TODO: search history in local storage. 8 in history in the example.
 // TODO: foundation might be a good bootsrap alternative
-
+var iconCode = "10d";
+function getIcon(){
+  fetch(`http://openweathermap.org/img/wn/${iconCode}@2x.png`)
+  .then(response => response.json())
+  .then(data => console.log(data));
+}
 
 
 
