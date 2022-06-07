@@ -37,8 +37,8 @@ function getCity() {
 // data.current.wind_speed for current wind speed
 // data.current.humidity for humidity
 // data.current.uvi for uv index
-// data.current.weather.icon for special icon
-// data.current.weather.description for brief description
+// data.current.weather[0].icon for special icon
+// data.current.weather[0].description for brief description
 function getCurrentWeather(lat, lon){
   fetch(`https://api.openweathermap.org/data/2.5/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
@@ -48,6 +48,14 @@ function getCurrentWeather(lat, lon){
   });
 }
 
+// data.daily[i].dt for timecode
+// data.daily[i].weather[0].icon
+// data.daily[i].temp.min 
+// data.daily[i].temp.max
+// data.daily[i].temp.day
+// data.daily[i].wind_speed
+// data.daily[i].humidity
+// data.daily[i].weather[0].description
 function getFiveDayForcast(lat, lon){
   fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
