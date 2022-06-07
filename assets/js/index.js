@@ -18,18 +18,23 @@ function getCity() {
     .then(data => {
       const lat = data[0].lat;
       const lon = data[0].lon;
-      getWeather(lat, lon);
+      getCurrentWeather(lat, lon);
     });
 }
 
-function getWeather(lat, lon){
-  fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
+function getCurrentWeather(lat, lon){
+  fetch(`https://api.openweathermap.org/data/3.0/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
   .then(data => {
     const conditionIcon = data.weather[0].icon;
+    console.log(data);
   });
+}
 
-  
+function getFiveDayForcast(lat, lon){
+  fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
+  .then(response => response.json())
+  .then(data => console.log(data));
 }
 // TODO: get 5 day forcast from API
 // TODO: single city focus gives: cityname, the date, icon for conditions, favorable, moderate, severe
