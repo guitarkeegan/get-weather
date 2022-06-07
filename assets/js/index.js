@@ -10,6 +10,17 @@ const searchFormEl = $("#search-form");
 // event listenters
 $("#search-button").on("click", getCity);
 
+// will give the lat and long, name, state, country. You can also omitt the country
+// {
+//   "name": "Torrance",
+//   "local_names": {
+//       "en": "Torrance"
+//   },
+//   "lat": 33.8358492,
+//   "lon": -118.3406288,
+//   "country": "US",
+//   "state": "California"
+// }
 function getCity() {
   cityName = searchInputEl.val();
   const limit = 1;
@@ -21,9 +32,15 @@ function getCity() {
       getCurrentWeather(lat, lon);
     });
 }
-
+// data.current.dt for current time in timecode
+// data.current.temp for temperature
+// data.current.wind_speed for current wind speed
+// data.current.humidity for humidity
+// data.current.uvi for uv index
+// data.current.weather.icon for special icon
+// data.current.weather.description for brief description
 function getCurrentWeather(lat, lon){
-  fetch(`https://api.openweathermap.org/data/3.0/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
+  fetch(`https://api.openweathermap.org/data/2.5/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
   .then(data => {
     const conditionIcon = data.weather[0].icon;
