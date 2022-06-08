@@ -3,15 +3,24 @@
 const dontGetExcitedItsFree = "6d22149510653199e733a7b2e1f24c54";
 let cityName = "";
 let recentSearches = [];
-// TODO: form to search for city
+// element references
 const headerEl = $("header");
 const mainEl = $("main");
 const searchInputEl = $("#city-searched");
 const searchFormEl = $("#search-form");
 const recentSearchesEl = $("#recent-searches");
+// city focus area
+const cityFocusDivEl = $("#city-focus");
+const focusCityNameEl = $("#focus-city-name-date");
+const focusDateEl = $("#focus-date");
+const focusTempEl = $("#focus-temp");
+const focusWindEl = $("#focus-wind");
+const focusHumidityEl = $("#focus-humidity");
+const focusUvIndexEl = $("#focus-uv-index");
+const focusUvIndexSpanEl = $("#focus-uv-span");
 // event listenters
 $("#search-button").on("click", getCity);
-
+// functions
 function getCity() {
   cityName = searchInputEl.val();
   const limit = 1;
@@ -22,16 +31,17 @@ function getCity() {
       const lon = data[0].lon;
       getCurrentWeather(lat, lon);
     });
-  // handleRecentSearches(cityName);
-  // printRecentSearches();
+  focusCityNameEl.text(cityName);
+  handleRecentSearches(cityName);
+  printRecentSearches();
 }
 
 function printSearchedCity(currentData){
-  const timecode = currentData.dt;
-  const temp = currentData.temp;
-  const windSpeed = currentData.wind_speed;
-  const humidity = currentData.humidity;
-  const uvIndex = currentData.uvi;
+  focusDateEl.text(currentData.dt);
+  focusTempEl.text(currentData.temp);
+  focusWindEl.text(currentData.wind_speed);
+  focusHumidityEl.text(currentData.humidity); 
+  focusUvIndexSpanEl.text(currentData.uvi);
   const icon = getIcon(currentData.weather[0].icon);
   const description = currentData.weather[0].description;
   const iconEl = $("<img>").attr("src", icon);
