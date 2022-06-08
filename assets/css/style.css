@@ -1,0 +1,23 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+header{
+    background-image: linear-gradient(to right, rgb(71, 110, 189) , rgb(32, 12, 81));
+    color: white;
+}
+
+h1{
+    font-weight: 900;
+}
+
+h2{
+    font-weight: 500;
+}
+
+/* classes */
+
+#search-button{
+    width: 100%;
+    background-color: rgb(107, 161, 227);
+}

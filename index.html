@@ -5,6 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Get Weather</title>
+
+    <!-- google fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;900&display=swap" rel="stylesheet">
+
+    <!-- bootstrap -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -14,40 +23,34 @@
 
     <!-- header -->
 
-    <header class="container">
+    <header class="container pt-2 pb-3 text-center">
         <h1>Get Weather</h1>
     </header>
 
     <!-- search form -->
+    <main class="container">
+        <div class="row">
+            <section id="left-column" class="vstack col-sm-3">
+                <div class="mb-3 mt-1">
+                    <form id="search-form" onsubmit="return false" autocomplete="off">
+                        <label class="form-label"><h2>Search City</h2></label>
+                        <input type="text" class="form-control" id="city-searched" placeholder="Los Angles, CA">
+                        <button type="submit" id="search-button" class="btn btn-primary mb-3 mt-2">Search</button>
+                        <hr>
+                    </form>
+                </div>
+                <!-- recent searches -->
+                <div id="recent-searches" class="col-sm-3"></div>
+            </section>
+            <!-- city focus -->
+            <section id="right-side" class="col-sm-9 vstack">
+                <div id="city-focus" class=""></div>
+                <!-- five day forcast -->
+                <div id="five-day-forcast" class="hstack"></div>
+            </section>
 
-    <section class="container">
-        <div class="mb-3">
-            <form id="search-form" onsubmit="return false" autocomplete="off">
-                <label class="form-label">Search City</label>
-                <input type="text" class="form-control" id="city-searched" placeholder="Los Angles, CA">
-                <button type="submit" id="search-button" class="btn btn-primary mb-3">Get Weather</button>
-            </form>
         </div>
-    </section>
-
-    <!-- recent searches -->
-
-    <section id="recent-searches" class="container">
-
-    </section>
-
-    <!-- city focus -->
-
-    <section id="city-focus" class="container">
-
-    </section>
-
-    <!-- five day forcast -->
-
-    <section id="five-day-forcast" class="container">
-
-    </section>
-
+    </main>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
