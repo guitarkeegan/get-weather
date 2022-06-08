@@ -32,6 +32,16 @@ function getCity() {
       getCurrentWeather(lat, lon);
     });
 }
+
+function printSearchedCity(currentData){
+  const timecode = currentData.dt;
+  const temp = currentData.temp;
+  const windSpeed = currentData.wind_speed;
+  const humidity = currentData.humidity;
+  const uvIndex = currentData.uvi;
+  const icon = getIcon(currentData.weather[0].icon);
+  const description = currentData.weather[0].description;
+}
 // data.current.dt for current time in timecode
 // data.current.temp for temperature
 // data.current.wind_speed for current wind speed
@@ -43,14 +53,13 @@ function getCurrentWeather(lat, lon){
   fetch(`https://api.openweathermap.org/data/2.5/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
   .then(data => {
-    const conditionIcon = data.weather[0].icon;
-    console.log(data);
+    printSearchedCity(data.current);
   });
 }
 
 function printFiveDayForcast(daily){
   const timeCode = daily.dt;
-  const icon = daily.weather[0].icon;
+  const icon = getIcon(daily.weather[0].icon); 
   const minTemp = daily.temp.min;
   const maxTemp = daily.temp.max;
   const windSpeed = daily.wind_speed;
@@ -81,8 +90,8 @@ function getFiveDayForcast(lat, lon){
 // TODO: 5 day forcast gives, date, icon for conditions, temp, wind speed, humidity
 // TODO: search history in local storage. 8 in history in the example.
 // TODO: foundation might be a good bootsrap alternative
-var iconCode = "10d";
-function getIcon(){
+
+function getIcon(iconCode){
   fetch(`http://openweathermap.org/img/wn/${iconCode}@2x.png`)
   .then(response => response.json())
   .then(data => console.log(data));
