@@ -22,8 +22,8 @@ function getCity() {
       const lon = data[0].lon;
       getCurrentWeather(lat, lon);
     });
-  handleRecentSearches(cityName);
-  printRecentSearches();
+  // handleRecentSearches(cityName);
+  // printRecentSearches();
 }
 
 function printSearchedCity(currentData){
@@ -34,6 +34,7 @@ function printSearchedCity(currentData){
   const uvIndex = currentData.uvi;
   const icon = getIcon(currentData.weather[0].icon);
   const description = currentData.weather[0].description;
+  const iconEl = $("<img>").attr("src", icon);
 }
 
 function getCurrentWeather(lat, lon){
@@ -75,9 +76,7 @@ function getFiveDayForcast(lat, lon){
 
 
 function getIcon(iconCode){
-  fetch(`http://openweathermap.org/img/wn/${iconCode}@2x.png`)
-  .then(response => response.json())
-  .then(data => console.log(data));
+  return `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
 
 function handleRecentSearches(cityName){
