@@ -48,6 +48,17 @@ function getCurrentWeather(lat, lon){
   });
 }
 
+function printFiveDayForcast(daily){
+  const timeCode = daily.dt;
+  const icon = daily.weather[0].icon;
+  const minTemp = daily.temp.min;
+  const maxTemp = daily.temp.max;
+  const windSpeed = daily.wind_speed;
+  const humidity = daily.humidity;
+  const description = daily.weather[0].description;
+}
+
+
 // data.daily[i].dt for timecode
 // data.daily[i].weather[0].icon
 // data.daily[i].temp.min 
@@ -59,7 +70,11 @@ function getCurrentWeather(lat, lon){
 function getFiveDayForcast(lat, lon){
   fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
   .then(response => response.json())
-  .then(data => console.log(data));
+  .then(data => {
+    for (let i=0;i<5;i++){
+      printFiveDayForcast(data.daily[i]);
+    }
+  });
 }
 // TODO: get 5 day forcast from API
 // TODO: single city focus gives: cityname, the date, icon for conditions, favorable, moderate, severe
