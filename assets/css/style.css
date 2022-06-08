@@ -14,8 +14,16 @@ h1{
 h2{
     font-weight: 500;
 }
-
 /* classes */
+
+.recent-search-item{
+    background-color: rgb(183, 183, 183);
+    width: 100%;
+    font-weight: 300;
+    color: rgb(28, 28, 28);
+}
+
+/* IDs */
 
 #search-button{
     width: 100%;
