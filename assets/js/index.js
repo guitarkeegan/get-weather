@@ -11,7 +11,7 @@ const searchFormEl = $("#search-form");
 const recentSearchesEl = $("#recent-searches");
 // city focus area
 const cityFocusDivEl = $("#city-focus");
-const focusCityNameEl = $("#focus-city-name-date");
+const focusCityNameEl = $("#focus-city-name");
 const focusDateEl = $("#focus-date");
 const focusTempEl = $("#focus-temp");
 const focusWindEl = $("#focus-wind");
@@ -37,10 +37,12 @@ function getCity() {
 }
 
 function printSearchedCity(currentData){
-  focusDateEl.text(currentData.dt);
-  focusTempEl.text(currentData.temp);
-  focusWindEl.text(currentData.wind_speed);
-  focusHumidityEl.text(currentData.humidity); 
+  const dateParse = dayjs.unix(currentData.dt);
+  focusDateEl.text(dateParse.format("MM-DD-YYYY"));
+  focusTempEl.text("Temp: " + currentData.temp + "°F");
+  focusWindEl.text("Wind: " + currentData.wind_speed + "MPH");
+  focusHumidityEl.text("Humidity: " + currentData.humidity + "%");
+  focusUvIndexEl.text("UV Index: " + currentData.uvi); //issues with display
   focusUvIndexSpanEl.text(currentData.uvi);
   const icon = getIcon(currentData.weather[0].icon);
   const description = currentData.weather[0].description;

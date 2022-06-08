@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Get Weather</title>
+    <!-- dayjs -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
 
     <!-- google fonts -->
 
@@ -33,7 +35,9 @@
             <section id="left-column" class="vstack col-sm-3">
                 <div class="mb-3 mt-1">
                     <form id="search-form" onsubmit="return false" autocomplete="off">
-                        <label class="form-label"><h2>Search City</h2></label>
+                        <label class="form-label">
+                            <h2>Search City</h2>
+                        </label>
                         <input type="text" class="form-control" id="city-searched" placeholder="Los Angles, CA">
                         <button type="submit" id="search-button" class="btn btn-primary mb-3 mt-2">Search</button>
                         <hr>
