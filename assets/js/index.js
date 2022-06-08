@@ -2,6 +2,7 @@
 // search variables
 const dontGetExcitedItsFree = "6d22149510653199e733a7b2e1f24c54";
 let cityName = "";
+let recentSearches = [];
 // TODO: form to search for city
 const headerEl = $("header");
 const mainEl = $("main");
@@ -96,6 +97,20 @@ function getIcon(iconCode){
   .then(response => response.json())
   .then(data => console.log(data));
 }
+
+function handleRecentSearches(cityName){
+  if (recentSearches.includes(cityName)){
+    const index  = recentSearches.indexOf(cityName);
+    const removedCity = recentSearches.splice(index, 1);
+    recentSearches.unshift(removedCity);
+  } else if (recentSearches.length < 8){
+    recentSearches.unshift(cityName);
+  } else {
+    recentSearches.pop()
+    recentSearches.unshift(cityName);
+  }
+}
+
 
 
 
