@@ -23,7 +23,7 @@ $("#search-button").on("click", getCity);
 // functions
 function getCity() {
   cityName = searchInputEl.val();
-  cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1)
+  cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1) // will miss more than the first word
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
@@ -38,7 +38,7 @@ function getCity() {
 
 function printSearchedCity(currentData){
   const dateParse = dayjs.unix(currentData.dt);
-  focusCityNameEl.text(cityName + " " + dateParse.format("MM-DD-YYYY"));
+  focusCityNameEl.text(cityName + " (" + dateParse.format("MM-DD-YYYY") + ")");
   focusTempEl.text("Temp: " + currentData.temp + "°F");
   focusWindEl.text("Wind: " + currentData.wind_speed + "MPH");
   focusHumidityEl.text("Humidity: " + currentData.humidity + "%");
@@ -68,12 +68,16 @@ function printFiveDayForcast(daily){
 
 function printRecentSearches(){
   // TODO: removed anything already displayed on the page
-  recentSearches.forEach((city)=>{
-    const cityEl = $("<button>").text(city);
-    cityEl.addClass("recent-search-item btn");
-    recentSearchesEl.append(cityEl);
-  })
-}
+  if (recentSearchesEl.children().length > 0){
+    for (let i=0;i<recentSearchesEl.children.length;i++){
+      recentSearchesEl.children()[i].remove();// not working
+    }
+    
+  }
+  const cityEl = $("<button>").text(cityName);
+  cityEl.addClass("recent-search-item btn");
+  recentSearchesEl.append(cityEl);
+  }
 
 function getFiveDayForcast(lat, lon){
   fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
@@ -101,6 +105,7 @@ function handleRecentSearches(cityName){
     recentSearches.pop()
     recentSearches.unshift(cityName);
   }
+  console.log(recentSearches);
 }
 
 // TODO: search history in local storage. 8 in history in the example.
