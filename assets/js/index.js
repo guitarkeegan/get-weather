@@ -23,6 +23,7 @@ $("#search-button").on("click", getCity);
 // functions
 function getCity() {
   cityName = searchInputEl.val();
+  cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1)
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
@@ -31,19 +32,17 @@ function getCity() {
       const lon = data[0].lon;
       getCurrentWeather(lat, lon);
     });
-  focusCityNameEl.text(cityName);
   handleRecentSearches(cityName);
   printRecentSearches();
 }
 
 function printSearchedCity(currentData){
   const dateParse = dayjs.unix(currentData.dt);
-  focusDateEl.text(dateParse.format("MM-DD-YYYY"));
+  focusCityNameEl.text(cityName + " " + dateParse.format("MM-DD-YYYY"));
   focusTempEl.text("Temp: " + currentData.temp + "°F");
   focusWindEl.text("Wind: " + currentData.wind_speed + "MPH");
   focusHumidityEl.text("Humidity: " + currentData.humidity + "%");
   focusUvIndexEl.text("UV Index: " + currentData.uvi); //issues with display
-  focusUvIndexSpanEl.text(currentData.uvi);
   const icon = getIcon(currentData.weather[0].icon);
   const description = currentData.weather[0].description;
   const iconEl = $("<img>").attr("src", icon);
