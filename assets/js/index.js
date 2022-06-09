@@ -22,6 +22,7 @@ $("#search-button").on("click", getCity);
 // functions
 function getCity() {
   cityName = searchInputEl.val();
+  searchFormEl.trigger("reset");
   cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1) // will miss more than the first word
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
@@ -50,6 +51,7 @@ function printSearchedCity(currentData){
   const description = currentData.weather[0].description;
   const iconEl = $("<img>").attr("src", icon);
   focusCityNameEl.append(iconEl);
+  localStorage.setItem("citySearches", recentSearches.join(", "))
 }
 
 function getCurrentWeather(lat, lon){
@@ -68,6 +70,7 @@ function printFiveDayForcast(daily){
   const windSpeed = daily.wind_speed;
   const humidity = daily.humidity;
   const description = daily.weather[0].description;
+
 }
 
 function printRecentSearches(){
@@ -117,4 +120,12 @@ function handleRecentSearches(cityName){
   console.log(recentSearches);
 }
 
-// TODO: search history in local storage. 8 in history in the example.
+function init(){
+  if (localStorage.getItem("citySearches") !== null){
+    let makeList = localStorage.getItem("citySearches").split(", ");
+    recentSearches = [...makeList];
+    printRecentSearches();
+  }
+}
+
+init();
