@@ -17,7 +17,6 @@ const focusTempEl = $("#focus-temp");
 const focusWindEl = $("#focus-wind");
 const focusHumidityEl = $("#focus-humidity");
 const focusUvIndexEl = $("#focus-uv-index");
-const focusUvIndexSpanEl = $("#focus-uv-span");
 // event listenters
 $("#search-button").on("click", getCity);
 // functions
@@ -38,14 +37,19 @@ function getCity() {
 
 function printSearchedCity(currentData){
   const dateParse = dayjs.unix(currentData.dt);
-  focusCityNameEl.text(cityName + " (" + dateParse.format("MM-DD-YYYY") + ")");
+  focusCityNameEl.text(cityName + " (");
+  let newFocusDate = $("<span id='focus-date'>").text(dateParse.format("MM-DD-YYYY") + ")");
+  focusCityNameEl.append(newFocusDate)
   focusTempEl.text("Temp: " + currentData.temp + "°F");
   focusWindEl.text("Wind: " + currentData.wind_speed + "MPH");
   focusHumidityEl.text("Humidity: " + currentData.humidity + "%");
-  focusUvIndexEl.text("UV Index: " + currentData.uvi); //issues with display
+  focusUvIndexEl.text("UV Index: ");
+  let newFocusUvi = $("<span id='focus-uvi'>").text(currentData.uvi);
+  focusUvIndexEl.append(newFocusUvi);
   const icon = getIcon(currentData.weather[0].icon);
   const description = currentData.weather[0].description;
   const iconEl = $("<img>").attr("src", icon);
+  focusCityNameEl.append(iconEl);
 }
 
 function getCurrentWeather(lat, lon){
@@ -69,14 +73,18 @@ function printFiveDayForcast(daily){
 function printRecentSearches(){
   // TODO: removed anything already displayed on the page
   if (recentSearchesEl.children().length > 0){
-    for (let i=0;i<recentSearchesEl.children.length;i++){
-      recentSearchesEl.children()[i].remove();// not working
+    for (let i=0;i<recentSearchesEl.children().length;i++){
+      recentSearchesEl.children()[i].remove();// removing all but the last search
     }
-    
   }
-  const cityEl = $("<button>").text(cityName);
+
+  recentSearchesEl.html("")
+  recentSearches.forEach(city=>{
+  const cityEl = $("<button>").text(city);
   cityEl.addClass("recent-search-item btn");
   recentSearchesEl.append(cityEl);
+  })
+  
   }
 
 function getFiveDayForcast(lat, lon){
@@ -98,7 +106,8 @@ function handleRecentSearches(cityName){
   if (recentSearches.includes(cityName)){
     const index  = recentSearches.indexOf(cityName);
     const removedCity = recentSearches.splice(index, 1);
-    recentSearches.unshift(removedCity);
+    console.log(removedCity)
+    recentSearches.unshift(removedCity[0]);
   } else if (recentSearches.length < 8){
     recentSearches.unshift(cityName);
   } else {

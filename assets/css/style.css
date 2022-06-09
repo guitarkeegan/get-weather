@@ -33,3 +33,9 @@ span{
     width: 100%;
     background-color: rgb(107, 161, 227);
 }
+#focus-uvi {
+    padding: 4px 12px;
+    background-color: rgb(59, 124, 84);
+    color: white;
+    border-radius: 3px;
+}
