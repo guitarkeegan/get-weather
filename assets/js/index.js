@@ -10,6 +10,7 @@ const searchInputEl = $("#city-searched");
 const searchFormEl = $("#search-form");
 const recentSearchesEl = $("#recent-searches");
 // city focus area
+const rightSideDivEl = $("right-side")
 const cityFocusDivEl = $("#city-focus");
 const focusCityNameEl = $("#focus-city-name");
 const focusDateEl = $("#focus-date");
@@ -17,11 +18,17 @@ const focusTempEl = $("#focus-temp");
 const focusWindEl = $("#focus-wind");
 const focusHumidityEl = $("#focus-humidity");
 const focusUvIndexEl = $("#focus-uv-index");
+// five day forcast area
+const fiveDayForcastDivEl = $("#five-day-forcast");
+
 // event listenters
-$("#search-button").on("click", getCity);
+$("#search-button").on("click", function(e){
+  getCity(searchInputEl.val());
+  fiveDayForcastDivEl.empty();
+});
 // functions
-function getCity() {
-  cityName = searchInputEl.val();
+function getCity(city) {
+  cityName = city;
   searchFormEl.trigger("reset");
   cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1) // will miss more than the first word
   const limit = 1;
@@ -31,6 +38,7 @@ function getCity() {
       const lat = data[0].lat;
       const lon = data[0].lon;
       getCurrentWeather(lat, lon);
+      getFiveDayForcast(lat, lon);
     });
   handleRecentSearches(cityName);
   printRecentSearches();
@@ -48,9 +56,10 @@ function printSearchedCity(currentData){
   let newFocusUvi = $("<span id='focus-uvi'>").text(currentData.uvi);
   focusUvIndexEl.append(newFocusUvi);
   const icon = getIcon(currentData.weather[0].icon);
-  const description = currentData.weather[0].description;
   const iconEl = $("<img>").attr("src", icon);
   focusCityNameEl.append(iconEl);
+  
+  
   localStorage.setItem("citySearches", recentSearches.join(", "))
 }
 
@@ -63,13 +72,22 @@ function getCurrentWeather(lat, lon){
 }
 
 function printFiveDayForcast(daily){
-  const timeCode = daily.dt;
+  const date = dayjs.unix(daily.dt).format("M/D/YYYY");
   const icon = getIcon(daily.weather[0].icon); 
   const minTemp = daily.temp.min;
   const maxTemp = daily.temp.max;
   const windSpeed = daily.wind_speed;
   const humidity = daily.humidity;
-  const description = daily.weather[0].description;
+  // const description = daily.weather[0].description;
+  const fiveDayForcastCardEl = $("<div>").attr({"id": "five-day-card", "class": "col-2 p-1 pt-2"});
+  const dateTitleEl = $("<h3>").text(date);
+  const iconEl = $("<img>").attr("src", icon);
+  const tempEl = $("<p>").text(`Temp: ${minTemp}°F - ${maxTemp}°F`);
+  const windEl = $("<p>").text(`Wind: ${windSpeed} MPH`);
+  const humidityEl = $("<p>").text(`Humidity: ${humidity} %`);
+  fiveDayForcastCardEl.append(dateTitleEl, iconEl, tempEl, windEl, humidityEl);
+  fiveDayForcastDivEl.append(fiveDayForcastCardEl);
+  $("#five-day-forcast-title").text("Five Day Forcast").css("color", "black");
 
 }
 
@@ -85,6 +103,10 @@ function printRecentSearches(){
   recentSearches.forEach(city=>{
   const cityEl = $("<button>").text(city);
   cityEl.addClass("recent-search-item btn");
+  cityEl.on("click", (e)=> {
+    getCity(e.target.textContent);
+    fiveDayForcastDivEl.empty();
+  })
   recentSearchesEl.append(cityEl);
   })
   
