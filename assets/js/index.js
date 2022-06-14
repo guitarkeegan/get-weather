@@ -30,7 +30,12 @@ $("#search-button").on("click", function(e){
 function getCity(city) {
   cityName = city;
   searchFormEl.trigger("reset");
-  cityName = cityName.charAt(0).toUpperCase() + cityName.slice(1) // will miss more than the first word
+  if (cityName.split(" ").length > 1){
+    // thank you to Max Favilli from stackoverflow for this one
+  cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
+  } else {
+    cityName = cityName.charAt(0).toUpperCase()
+  }
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
