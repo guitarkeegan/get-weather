@@ -147,6 +147,7 @@ function init(){
     let makeList = localStorage.getItem("citySearches").split(", ");
     recentSearches = [...makeList];
     printRecentSearches();
+    getCity(recentSearches[0]);
   }
 }
 
