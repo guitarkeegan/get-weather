@@ -32,21 +32,24 @@ function getCity(city) {
   searchFormEl.trigger("reset");
   if (cityName.split(" ").length > 1){
     // thank you to Max Favilli from stackoverflow for this one
-  cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
+    cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
   } else {
-    cityName = cityName.charAt(0).toUpperCase()
+    cityName = cityName[0].toUpperCase() + cityName.substring(1);
   }
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
     .then(data => {
-      const lat = data[0].lat;
-      const lon = data[0].lon;
-      getCurrentWeather(lat, lon);
-      getFiveDayForcast(lat, lon);
-    });
-  handleRecentSearches(cityName);
-  printRecentSearches();
+      if (data[0].lat && data[0].lon){
+        const lat = data[0].lat;
+        const lon = data[0].lon;
+        getCurrentWeather(lat, lon);
+        getFiveDayForcast(lat, lon);
+        handleRecentSearches(cityName);
+        printRecentSearches();
+      }
+    }).catch((err)=>handleSearchError(err));
+  
 }
 
 function printSearchedCity(currentData){
@@ -73,7 +76,8 @@ function getCurrentWeather(lat, lon){
   .then(response => response.json())
   .then(data => {
     printSearchedCity(data.current);
-  });
+  })
+  .catch(()=>handleSearchError())
 }
 
 function printFiveDayForcast(daily){
@@ -144,7 +148,14 @@ function handleRecentSearches(cityName){
     recentSearches.pop()
     recentSearches.unshift(cityName);
   }
-  console.log(recentSearches);
+}
+
+// will display a modal if there is a problem with any yelp fetch request. 
+function handleSearchError(){
+  $("#search-error-message-display").text("Sorry! It seems like there was an error with your search.");
+  $("#searchErrorModal").modal('show');
+  recentSearches.splice(0, 1);
+  $(document).on("keypress", (e)=> e.key === "Enter" ? $(".close-button").trigger("click") : console.log("now what?"));
 }
 
 function init(){
