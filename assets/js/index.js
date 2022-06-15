@@ -94,7 +94,7 @@ function printFiveDayForcast(daily) {
   const temp = daily.temp.day;
   const windSpeed = daily.wind_speed;
   const humidity = daily.humidity;
-  const fiveDayForcastCardEl = $("<div>").attr({ "id": "five-day-card", "class": "col-2 p-1 pt-2" });
+  const fiveDayForcastCardEl = $("<div>").attr({"class": "five-day-card col-2 p-1 pt-2" });
   const dateTitleEl = $("<h3>").text(date);
   const iconEl = $("<img>").attr("src", icon);
   const tempEl = $("<p>").text(`Temp: ${temp}°F`);

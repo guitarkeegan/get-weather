@@ -45,14 +45,33 @@ span{
     border-radius: 3px;
 }
 
-#five-day-card{
+.five-day-card{
     background-color: rgb(55, 70, 89);
     color: white;
 }
-#five-day-card h3{
+.five-day-card h3{
     color: white;
 }
 
 #five-day-forcast-title{
     margin-top: 10px;
+}
+
+@media screen and (max-width: 1200px){
+    .five-day-card h3{
+        font-size: large;
+    }
+}
+
+@media screen and (max-width: 768px){
+    #five-day-forcast{
+        display: block!important;
+        text-align: center;
+    }
+    .five-day-card{
+        width: 100%;
+        margin: 10px 0;
+        padding: 0;
+    }
+
 }
