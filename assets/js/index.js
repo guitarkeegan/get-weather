@@ -1,5 +1,3 @@
-// api call https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-// search variables
 const dontGetExcitedItsFree = "6d22149510653199e733a7b2e1f24c54";
 let cityName = "";
 let recentSearches = [];
@@ -22,25 +20,35 @@ const focusUvIndexEl = $("#focus-uv-index");
 const fiveDayForcastDivEl = $("#five-day-forcast");
 
 // event listenters
-$("#search-button").on("click", function(e){
+// search button will call the get city method as well as refresh the five-day forcast.
+$("#search-button").on("click", function (e) {
   getCity(searchInputEl.val());
   fiveDayForcastDivEl.empty();
 });
-// functions
+// The open weather API seemed to have problems at times if the state was given without a country code, so the 
+// user is limited to just providing a city name for now.
 function getCity(city) {
-  cityName = city;
+  cityName = city.toLowerCase()
+  if (city.match(/,/g)) {
+    // a modal will be called if this error is triggered
+    handleSearchError();
+    return;
+  } 
   searchFormEl.trigger("reset");
-  if (cityName.split(" ").length > 1){
+  // if the city name has more than one word, this statement will title case the city
+  if (cityName.split(" ").length > 1) {
     // thank you to Max Favilli from stackoverflow for this one
     cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
   } else {
     cityName = cityName[0].toUpperCase() + cityName.substring(1);
   }
+  // fetch request will return the latitude and longitude for a given city, then call the current and 5-day forcast.
+  // If the search is successful, the city will be saved in local storage and printed to the screen.
   const limit = 1;
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
     .then(data => {
-      if (data[0].lat && data[0].lon){
+      if (data[0].lat && data[0].lon) {
         const lat = data[0].lat;
         const lon = data[0].lon;
         getCurrentWeather(lat, lon);
@@ -48,11 +56,11 @@ function getCity(city) {
         handleRecentSearches(cityName);
         printRecentSearches();
       }
-    }).catch((err)=>handleSearchError(err));
-  
-}
+    }).catch((err) => handleSearchError(err));
 
-function printSearchedCity(currentData){
+}
+// Here we will print the current weather data to the screen and save the search to local storage.
+function printSearchedCity(currentData) {
   const dateParse = dayjs.unix(currentData.dt);
   focusCityNameEl.text(cityName + " (");
   let newFocusDate = $("<span id='focus-date'>").text(dateParse.format("MM-DD-YYYY") + ")");
@@ -66,32 +74,30 @@ function printSearchedCity(currentData){
   const icon = getIcon(currentData.weather[0].icon);
   const iconEl = $("<img>").attr("src", icon);
   focusCityNameEl.append(iconEl);
-  
-  
+
+
   localStorage.setItem("citySearches", recentSearches.join(", "))
 }
-
-function getCurrentWeather(lat, lon){
+// function will get current weather for the specific geolocation.
+function getCurrentWeather(lat, lon) {
   fetch(`https://api.openweathermap.org/data/2.5/onecall?exclude=minutely&units=imperial&lat=${lat}&lon=${lon}&appid=${dontGetExcitedItsFree}`)
-  .then(response => response.json())
-  .then(data => {
-    printSearchedCity(data.current);
-  })
-  .catch(()=>handleSearchError())
+    .then(response => response.json())
+    .then(data => {
+      printSearchedCity(data.current);
+    })
+    .catch(() => handleSearchError())
 }
-
-function printFiveDayForcast(daily){
+// function will print the 5-day forcast to screen.
+function printFiveDayForcast(daily) {
   const date = dayjs.unix(daily.dt).format("M/D/YYYY");
-  const icon = getIcon(daily.weather[0].icon); 
-  const minTemp = daily.temp.min;
-  const maxTemp = daily.temp.max;
+  const icon = getIcon(daily.weather[0].icon);
+  const temp = daily.temp.day;
   const windSpeed = daily.wind_speed;
   const humidity = daily.humidity;
-  // const description = daily.weather[0].description;
-  const fiveDayForcastCardEl = $("<div>").attr({"id": "five-day-card", "class": "col-2 p-1 pt-2"});
+  const fiveDayForcastCardEl = $("<div>").attr({ "id": "five-day-card", "class": "col-2 p-1 pt-2" });
   const dateTitleEl = $("<h3>").text(date);
   const iconEl = $("<img>").attr("src", icon);
-  const tempEl = $("<p>").text(`Temp: ${minTemp}°F - ${maxTemp}°F`);
+  const tempEl = $("<p>").text(`Temp: ${temp}°F`);
   const windEl = $("<p>").text(`Wind: ${windSpeed} MPH`);
   const humidityEl = $("<p>").text(`Humidity: ${humidity} %`);
   fiveDayForcastCardEl.append(dateTitleEl, iconEl, tempEl, windEl, humidityEl);
@@ -99,50 +105,49 @@ function printFiveDayForcast(daily){
   $("#five-day-forcast-title").text("Five Day Forcast").css("color", "black");
 
 }
-
-function printRecentSearches(){
+// function will print the recently searched cities
+function printRecentSearches() {
   // TODO: removed anything already displayed on the page
-  if (recentSearchesEl.children().length > 0){
-    for (let i=0;i<recentSearchesEl.children().length;i++){
-      recentSearchesEl.children()[i].remove();// removing all but the last search
+  if (recentSearchesEl.children().length > 0) {
+    for (let i = 0; i < recentSearchesEl.children().length; i++) {
+      recentSearchesEl.children()[i].remove();
     }
   }
-
+// neat trick to clear the html. The recent-search-item buttons will also be given event listeners for 
+// repeat searches at a later point.
   recentSearchesEl.html("")
-  recentSearches.forEach(city=>{
-  const cityEl = $("<button>").text(city);
-  cityEl.addClass("recent-search-item btn");
-  cityEl.on("click", (e)=> {
-    getCity(e.target.textContent);
-    fiveDayForcastDivEl.empty();
+  recentSearches.forEach(city => {
+    const cityEl = $("<button>").text(city);
+    cityEl.addClass("recent-search-item btn");
+    cityEl.on("click", (e) => {
+      getCity(e.target.textContent);
+      fiveDayForcastDivEl.empty();
+    })
+    recentSearchesEl.append(cityEl);
   })
-  recentSearchesEl.append(cityEl);
-  })
-  
-  }
-
-function getFiveDayForcast(lat, lon){
-  fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&&appid=${dontGetExcitedItsFree}`)
-  .then(response => response.json())
-  .then(data => {
-    for (let i=0;i<5;i++){
-      printFiveDayForcast(data.daily[i]);
-    }
-  });
+}
+// fetch the five-day forcast
+function getFiveDayForcast(lat, lon) {
+  fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${dontGetExcitedItsFree}`)
+    .then(response => response.json())
+    .then(data => {
+      for (let i = 0; i < 5; i++) {
+        printFiveDayForcast(data.daily[i]);
+      }
+    });
 }
 
-
-function getIcon(iconCode){
+// url for the appropriate weather icon.
+function getIcon(iconCode) {
   return `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
-
-function handleRecentSearches(cityName){
-  if (recentSearches.includes(cityName)){
-    const index  = recentSearches.indexOf(cityName);
+// function will keep the order of recent searches accurate and limited to up to 8 recent searches
+function handleRecentSearches(cityName) {
+  if (recentSearches.includes(cityName)) {
+    const index = recentSearches.indexOf(cityName);
     const removedCity = recentSearches.splice(index, 1);
-    console.log(removedCity)
     recentSearches.unshift(removedCity[0]);
-  } else if (recentSearches.length < 8){
+  } else if (recentSearches.length < 8) {
     recentSearches.unshift(cityName);
   } else {
     recentSearches.pop()
@@ -150,16 +155,20 @@ function handleRecentSearches(cityName){
   }
 }
 
-// will display a modal if there is a problem with any yelp fetch request. 
-function handleSearchError(){
-  $("#search-error-message-display").text("Sorry! It seems like there was an error with your search.");
+// will display a modal if are errors on the search or API calls.  
+function handleSearchError() {
+  $("#search-error-message-display").text("Sorry! It seems like there was an error with your search. Try to only list a city.");
   $("#searchErrorModal").modal('show');
   recentSearches.splice(0, 1);
-  $(document).on("keypress", (e)=> e.key === "Enter" ? $(".close-button").trigger("click") : console.log("now what?"));
+  $(document).on("keypress", (e) => {
+    if (e.key === "Enter") {
+      $(".close-button").trigger("click")
+    }
+  })
 }
-
-function init(){
-  if (localStorage.getItem("citySearches") !== null){
+// call local storage at the start of the page load and display the recent searches to the screen.
+function init() {
+  if (localStorage.getItem("citySearches") !== null) {
     let makeList = localStorage.getItem("citySearches").split(", ");
     recentSearches = [...makeList];
     printRecentSearches();
