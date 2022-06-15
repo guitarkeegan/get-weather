@@ -41,11 +41,12 @@ function getCity(city) {
     cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
   } else {
     cityName = cityName[0].toUpperCase() + cityName.substring(1);
+    console.log(cityName);
   }
   // fetch request will return the latitude and longitude for a given city, then call the current and 5-day forcast.
   // If the search is successful, the city will be saved in local storage and printed to the screen.
   const limit = 1;
-  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
+  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&${limit}&appid=${dontGetExcitedItsFree}`)
     .then(response => response.json())
     .then(data => {
       if (data[0].lat && data[0].lon) {
@@ -139,7 +140,7 @@ function getFiveDayForcast(lat, lon) {
 
 // url for the appropriate weather icon.
 function getIcon(iconCode) {
-  return `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+  return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
 // function will keep the order of recent searches accurate and limited to up to 8 recent searches
 function handleRecentSearches(cityName) {
