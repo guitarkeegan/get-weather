@@ -41,7 +41,7 @@ function getCity(city) {
     cityName = cityName.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(' ');
   } else {
     cityName = cityName[0].toUpperCase() + cityName.substring(1);
-    console.log(cityName);
+    
   }
   // fetch request will return the latitude and longitude for a given city, then call the current and 5-day forcast.
   // If the search is successful, the city will be saved in local storage and printed to the screen.
