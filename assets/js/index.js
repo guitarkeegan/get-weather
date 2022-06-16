@@ -108,7 +108,7 @@ function printFiveDayForcast(daily) {
 }
 // function will print the recently searched cities
 function printRecentSearches() {
-  // TODO: removed anything already displayed on the page
+
   if (recentSearchesEl.children().length > 0) {
     for (let i = 0; i < recentSearchesEl.children().length; i++) {
       recentSearchesEl.children()[i].remove();
