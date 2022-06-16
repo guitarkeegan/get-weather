@@ -69,8 +69,16 @@ function printSearchedCity(currentData) {
   focusTempEl.text("Temp: " + currentData.temp + "°F");
   focusWindEl.text("Wind: " + currentData.wind_speed + "MPH");
   focusHumidityEl.text("Humidity: " + currentData.humidity + "%");
+  let uviBackgroundColor = "";
+  if (currentData.uvi >= 0 && currentData.uvi < 2){
+    uviBackgroundColor = "rgb(59, 124, 84)";//green
+  } else if (currentData.uvi >= 3 && currentData.uvi < 5){
+    uviBackgroundColor = "#7D7036"//yellow
+  } else {
+    uviBackgroundColor = "#7D332F"//red
+  }
   focusUvIndexEl.text("UV Index: ");
-  let newFocusUvi = $("<span id='focus-uvi'>").text(currentData.uvi);
+  let newFocusUvi = $("<span id='focus-uvi'>").text(currentData.uvi).css({"padding": "4px 12px", "background-color": `${uviBackgroundColor}`, "color": "white", "border-radius": "3px"});
   focusUvIndexEl.append(newFocusUvi);
   const icon = getIcon(currentData.weather[0].icon);
   const iconEl = $("<img>").attr("src", icon);
